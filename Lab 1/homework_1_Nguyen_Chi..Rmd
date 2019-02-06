@@ -15,6 +15,7 @@ library(mdsr)
 library(tidyverse)
 data("WorldCities")
 ```
+Question 1:
 There are 23,018 observations and 10 variables in this data set.
 Some of the variable names are code, name, latitude, longtitude, contry, countryRegion, population, regionCode, region, and date. 
 
@@ -25,18 +26,34 @@ glimpse(WorldCities)
 WorldCities <- head(WorldCities, 200)
 country_col <-WorldCities$country
 unique(country_col)
+```
+Question 2:
+```{r}
 region_col <-WorldCities$region
 unique(region_col)
 WorldCities %>% select(region) %>% head(5)
+```
+Question3:
+```{r}
 WorldCities %>% select(country) %>% unique()
 WorldCities %>% ggplot(aes(x = population)) +
   geom_histogram()
 WorldCities %>% ggplot(aes(x = population)) +
 geom_histogram() +
 xlab('City Population')
-
 ```
 
+
+
+
+
+
+
+
+
+
+
+Question 4:
 ```{r}
 WorldCities %>% ggplot(aes(x = population)) +
 geom_histogram() +
@@ -45,7 +62,5 @@ ylab('Counts of Cities')+
 ggtitle('Population Observations Diagram')+
 theme_bw()
 ```
-
-
 
 

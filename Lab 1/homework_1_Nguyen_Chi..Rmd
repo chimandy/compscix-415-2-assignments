@@ -1,0 +1,50 @@
+---
+title: "COMPSCIX 415.2 Homework 1"
+author: "Chi Nguyen"
+date: "2/2/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+My Github repository for my assignments can be found at this URL: https://github.com/chimandy/-compscix-415-2-assignments.git
+```{r load_pakages, warning=FALSE, message=FALSE}
+library(mdsr)
+library(tidyverse)
+data("WorldCities")
+```
+There are 23,018 observations and 10 variables in this data set.
+Some of the variable names are code, name, latitude, longtitude, contry, countryRegion, population, regionCode, region, and date. 
+
+```{r}
+glimpse(WorldCities)
+```
+```{r}
+WorldCities <- head(WorldCities, 200)
+country_col <-WorldCities$country
+unique(country_col)
+region_col <-WorldCities$region
+unique(region_col)
+WorldCities %>% select(region) %>% head(5)
+WorldCities %>% select(country) %>% unique()
+WorldCities %>% ggplot(aes(x = population)) +
+  geom_histogram()
+WorldCities %>% ggplot(aes(x = population)) +
+geom_histogram() +
+xlab('City Population')
+
+```
+
+```{r}
+WorldCities %>% ggplot(aes(x = population)) +
+geom_histogram() +
+xlab('Population Numbers')+
+ylab('Counts of Cities')+
+ggtitle('Population Observations Diagram')+
+theme_bw()
+```
+
+
+
+

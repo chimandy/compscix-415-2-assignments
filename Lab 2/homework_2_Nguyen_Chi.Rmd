@@ -55,7 +55,7 @@ ggplot(data = mpg) +
 ```
 
 
-A scatterplot of class vs drv is not useful because class and drv are just two lists of models/types of cars with different drive transmission categories. Therefore, there is no studies or correlation between these two categorical varibales without comparing them against any countinuous variables, it will make the points on the plot overllapped with one another. 
+A scatterplot of class vs drv is not useful because class and drv are just two lists of models/types of cars with different drive transmission categories. Therefore, there is no correlation between these two categorical varibales without comparing them against any countinuous variables, it will make the points on the plot overllapped with one another. 
 
 ##**Section 3.3.1** all exercises
 
@@ -115,18 +115,21 @@ ggplot(data = mpg) +
 *b.*size:
 ```{r}
 ggplot(data = mpg) +
-  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+  geom_point(mapping = aes(x = displ, y = hwy, size = class))
 ```
 
 *c.*shape:
 ```{r}
 ggplot(data=mpg)+
-  geom_point( mapping = aes(x=displ, y=hwy,size=class))
+  geom_point( mapping = aes(x=displ, y=hwy,shape=class))
 ```
 
 *Warning*: there is a warning showing that  "using size for a discrete variable is not advised""
 
-After mapping a continuous variable to color, size, and shape and mapping a catergorical variable to color, size, and shape, there are showing some major differences between these aestehtics. For example, continuous varibales like cty are visualized on a spectrum of color to identify different types of city miles per gallon (eg. a spectrum of blue),wheresas catergorical variables like class are binned into discrete categories of different colors for different type of cars. 
+After mapping a continuous variable to color, size, and shape and mapping a catergorical variable to color, size,and shape, there are showing some major differences between these aestehtics.
+For example, for color, continuous varibales like cty are visualized on a spectrum of color to identify different types of city miles per gallon (eg. a spectrum of blue),wheresas catergorical variables like class are binned into discrete categories of different colors for different type of cars. 
+In addition, for size, continous variables assign different sizes of dot corresponding to the values from smallest to the biggest. Meanwhile, for categorical variables, size defines different size to distinguish different types of catergories. 
+For shape, there is an error showingf or a continuous variable, meanwhie, shape assign different types of shapes for different categories for categorical variable. 
 
 ###*Question 4*. What happens if you map the same variable to multiple aesthetics?
 ```{r}
@@ -134,7 +137,7 @@ ggplot(data=mpg)+
   geom_point( mapping = aes(x=displ, y=hwy, color=cty, size=cty))
 ```
 
-If I map the same vaibale cty to multiple aesthetics like color or size, both aesthetics are implemented, and multiple legends are generated. 
+If I map the same varible cty to multiple aesthetics like color or size, both aesthetics are implemented, and multiple legends are generated. 
 
 ###*Question 5*: What does the stroke aesthetic do ? What shapes does it work with ? ( hint: use ?geom_point)
 ```{r}
@@ -145,7 +148,8 @@ ggplot(data=mpg)+
   geom_point(mapping=aes(x=displ, y=hwy), stroke=3, alpha=0.4, color='blue')
 ```
 
-stroke adjusts the thicknees of the border for alpha that can take on different colors both inside and outside. 
+stroke adjusts the thickness of the border for alpha that can take on different colors both inside and outside. 
+
 
 ###*Question 6*: What happens if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5)? Note, you’ll also need to specify x and y.
 
@@ -172,7 +176,7 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy, color = class))
 ```
 
-By using faceting instead of the colour aesthetic, there are advantages and disadvanatges as below: 
+By using faceting instead of the color aesthetic, there are advantages and disadvanatges as below: 
 
 *a.* Advantages :
 
@@ -197,6 +201,7 @@ ncol: It will define number of columns that facet plot should have
 scales: Should scales be fixed ("fixed", the default), free ("free"), or free in one dimension ("free_x", "free_y")?
 
 shrink: If TRUE, will shrink scales to fit output of statistics, not raw data. If FALSE, will be range of raw data before statistical summary.
+
 labeller: A function that takes one data frame of labels and returns a list or data frame of character vectors. Each input column corresponds to one factor. Thus there will be more than one with formulae of the type ~cyl + am. Each output column gets displayed as one separate line in the strip label. This function should inherit from the "labeller" S3 class for compatibility with 
 
 labeller(). See label_value() for more details and pointers to other options.
@@ -322,5 +327,5 @@ geom_col is one of two types of bar charts. It makes the heights of the bar repr
 ###**Answer these questions:**
 1. Look at the data graphics at the following link: What is a Data Scientist. Please briefly critique the designer’s choices. What works? What doesn’t work? What would you have done differently?
 
-The designer's choices have some workable and some unworkable features. It works since he uses some bar charts to present some percenatges, and spectrum of blue color to differitate among diffrent values. It does not work since it lacks of ohter colors to better presentation and some studies are not presented in any plots or bar charts that it lacks convinceable presentation to the audience.I would use some bar charts or plots and other colors to make it more presentable. 
+The designer's choices have some workable and some unworkable features. It works since he uses some bar charts to present some percenatges, and spectrum of blue color to differitate among diffrent values with very neat graphic design. It does not work since it lacks of other colors to better presentation and some studies/numbers are not presented in any plots or bar charts that it lacks convinceable presentation to the audience.I would use some bar charts or plots and other colors to make it more presentable. 
 

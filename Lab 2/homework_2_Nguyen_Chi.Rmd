@@ -1,31 +1,37 @@
 ---
 title: "COMPSCIX 415.2 Homework 2"
 author: "Chi Nguyen"
-date: "2/9/2019"
-output: html_document
+date: "2/10/19"
+output:
+  html_document:
+    self_contained: true
 ---
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
-My Github repository for my assignments can be found at this URL: 
+My Github repository for my assignments can be found at this URL: https://github.com/chimandy/compscix-415-2-assignments.git
 
-```{r}
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr)
 library(tidyverse)
+library(ggplot2)
 ```
 
-Section 3.2.4 all exercises
-Question 1. Run ggplot(data = mpg). What do you see?
+##**Section 3.2.4** :all exercises
+###*Question 1*: Run ggplot(data = mpg). What do you see?
 ```{r}
 ggplot(data = mpg)
 ```
 
 If I run ggplot(data = mpg), I see an empty grapth
-Question 2.How many rows are in mpg? How many columns?
+
+###*Question 2*:How many rows are in mpg? How many columns?
 ```{r}
 mpg
 ```
 There are 234 rows and 11 columns in mpg
-Question 3. What does the drv variable describe? Read the help for ?mpg to find out.
+
+###*Question 3*: What does the drv variable describe? Read the help for ?mpg to find out.
 ```{r}
 ?mpg
 ```
@@ -34,14 +40,15 @@ There are basically 3 types of drv varible:
 f = front-wheel drive
 r = rear wheel drive
 4 = 4wd
-Question 4. Make a scatterplot of hwy vs cyl
+
+###*Question 4*: Make a scatterplot of hwy vs cyl
 
 ```{r}
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = hwy, y = cyl))
 ```
 
-Question 5. What happens if you make a scatterplot of class vs drv? Why is the plot not useful?
+###*Question 5*: What happens if you make a scatterplot of class vs drv? Why is the plot not useful?
 ```{r}
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = class, y = drv))
@@ -50,9 +57,9 @@ ggplot(data = mpg) +
 
 A scatterplot of class vs drv is not useful because class and drv are just two lists of models/types of cars with different drive transmission categories. Therefore, there is no studies or correlation between these two categorical varibales without comparing them against any countinuous variables, it will make the points on the plot overllapped with one another. 
 
-Section 3.3.1 all exercises
+##**Section 3.3.1** all exercises
 
-Question 1. What’s gone wrong with this code? Why are the points not blue?
+###*Question 1*: What’s gone wrong with this code? Why are the points not blue?
 ```{r}
 ggplot(data = mpg) + 
   geom_point(mapping = aes(x = displ, y = hwy, color = "blue"))
@@ -64,64 +71,64 @@ ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy), color = "blue")
 ```
 
-Question 2. 
-Which variables in mpg are categorical? Which variables are continuous? (Hint: type ?mpg to read the documentation for the dataset). How can you see this information when you run mpg?
+###*Question 2 *:Which variables in mpg are categorical? Which variables are continuous? (Hint: type ?mpg to read the documentation for the dataset). How can you see this information when you run mpg?
 In mpg dataset, 
-  Categorical variables: manufacturer, model, trans, drv, fl, class. 
-  Continuous variables:displ,year,cyl,cty,hwy.
+  *a.Categorical variables*: manufacturer, model, trans, drv, fl, class. 
+  *b.Continuous variables*:displ,year,cyl,cty,hwy.
   
 ```{r}
 mpg
 ```
 When you run mpg, categorical varibales are type <chr>, whereas cointinuous variables are either type <dbl> or <int>
 
-Question 3: Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
-I. Continuous varibale:
+###*Question 3*: Map a continuous variable to color, size, and shape. How do these aesthetics behave differently for categorical vs. continuous variables?
 
-a. color:
+**I. Continuous varibale:**
+
+*a.* color:
 ```{r}
 ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy, color = cty))
 ```
 
-b. size:
+*b.* size:
 ```{r}
 ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy, size = cty))
 ```
 
-c. shape:
+*c.* shape:
 ```{r}
 #ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy, shape = cty))
 ```
 Error: There is an error showing "A continuous variable can not be mapped to shape"
 
-II. Categorical variable:
+**II. Categorical variable:**
 
-a.color:
+*a.*color:
 ```{r}
 ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy, color = class))
 ```
 
-b.size:
+*b.*size:
 ```{r}
 ggplot(data = mpg) +
   geom_point(mapping = aes(x = displ, y = hwy, color = class))
 ```
 
-c.shape:
+*c.*shape:
 ```{r}
 ggplot(data=mpg)+
   geom_point( mapping = aes(x=displ, y=hwy,size=class))
 ```
 
-Warning: there is a warning showing that  "using size for a discrete variable is not advised""
+*Warning*: there is a warning showing that  "using size for a discrete variable is not advised""
 
 After mapping a continuous variable to color, size, and shape and mapping a catergorical variable to color, size, and shape, there are showing some major differences between these aestehtics. For example, continuous varibales like cty are visualized on a spectrum of color to identify different types of city miles per gallon (eg. a spectrum of blue),wheresas catergorical variables like class are binned into discrete categories of different colors for different type of cars. 
 
-Question 4. What happens if you map the same variable to multiple aesthetics?
+###*Question 4*. What happens if you map the same variable to multiple aesthetics?
 ```{r}
 ggplot(data=mpg)+
   geom_point( mapping = aes(x=displ, y=hwy, color=cty, size=cty))
@@ -129,7 +136,7 @@ ggplot(data=mpg)+
 
 If I map the same vaibale cty to multiple aesthetics like color or size, both aesthetics are implemented, and multiple legends are generated. 
 
-Question 5: What does the stroke aesthetic do ? What shapes does it work with ? ( hint: use ?geom_point)
+###*Question 5*: What does the stroke aesthetic do ? What shapes does it work with ? ( hint: use ?geom_point)
 ```{r}
 ?geom_point
 ```
@@ -140,7 +147,7 @@ ggplot(data=mpg)+
 
 stroke adjusts the thicknees of the border for alpha that can take on different colors both inside and outside. 
 
-Question 6: What happens if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5)? Note, you’ll also need to specify x and y.
+###*Question 6*: What happens if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5)? Note, you’ll also need to specify x and y.
 
 ```{r}
 ggplot(data = mpg)+
@@ -149,9 +156,9 @@ ggplot(data = mpg)+
 
 If you map if you map an aesthetic to something other than a variable name, like aes(colour = displ < 5, R executes the code and creates a temporary variable containing the results of the operation. Here, the new variable takes on a value of TRUE if the engine displacement is less than 5 or FALSE if the engine displacement is more than or equal to 5.
 
-Section 3.5.1:#4 and #5 only
+##**Section 3.5.1**:#4 and #5 only
 
-Question 4: Take the first faceted plot in this section:
+###*Question 4*: Take the first faceted plot in this section:
 What are the advantages to using faceting instead of the colour aesthetic? What are the disadvantages? How might the balance change if you had a larger dataset?
 
 ```{r}
@@ -167,17 +174,17 @@ ggplot(data = mpg) +
 
 By using faceting instead of the colour aesthetic, there are advantages and disadvanatges as below: 
 
-a. Advantages :
+*a.* Advantages :
 
 Faceting splits the date into seperate grids for each differnt class and we can better visualizing and better micro-studying trend within each individual facet. 
 
-b. Disadvantages :
+*b.* Disadvantages :
 
 It's harder to visualize the whole picture of the overall macro-relationship across all facets. 
 
 The color aesthetic is fine when your dataset is small, but with the enalarging and bigger datasets all points may begin to overlap with one another and the audience might get confused with insuficient presentation with a colored plot only when the datasets grows and just add additional color aesthetic to the plot. 
 
-Question 5:Read ?facet_wrap. What does nrow do? What does ncol do? What other options control the layout of the individual panels? Why doesn’t facet_grid() have nrow and ncol arguments?
+###*Question 5*:Read ?facet_wrap. What does nrow do? What does ncol do? What other options control the layout of the individual panels? Why doesn’t facet_grid() have nrow and ncol arguments?
 
 ```{r}
 ?facet_wrap
@@ -207,15 +214,15 @@ strip.position: By default, the labels are displayed on the top of the plot. Usi
 
 The reason that facet_grid() doesn't have nrow and ncol as facet_wrap because facet_grid() forms a matrix of panels defined by row and column faceting variables. It is most useful when you have two discrete variables, and all combinations of the variables exist in the data, whereas facet_wrap wraps a 1d sequence of panels into 2d. This is generally a better use of screen space than facet_grid() because most displays are roughly rectangular.
 
-Section 3.6.1:#1-5
+##**Section 3.6.1**:#1-5
 
-Question 1: What geom would you use to draw a line chart? A boxplot? A histogram? An area chart?
+###*Question 1*: What geom would you use to draw a line chart? A boxplot? A histogram? An area chart?
 a.Line chart - geom_line()
 b.boxplot - geo_boxplot()
 c.histogram - geom_histogram()
 d.are chart -geom_area() 
 
-Question 2:Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions
+###*Question 2*:Run this code in your head and predict what the output will look like. Then, run the code in R and check your predictions
 
 
 ```{r}
@@ -224,7 +231,7 @@ ggplot(data = mpg, mapping = aes(x = displ, y = hwy, color = drv)) +
   geom_smooth(se = FALSE)
 ```
 
-Question 3: What does show.legend = FALSE do? What happens if you remove it?
+###*Question 3*: What does show.legend = FALSE do? What happens if you remove it?
 Why do you think I used it earlier in the chapter?
 
 Without show.legend = FALSE
@@ -243,10 +250,10 @@ ggplot(data = mpg) +
 
 show.legend = FALSE removes the legend although The aesthetics are still mapped and plotted.When show.legend = FALSE is removed, the legend will shows a legend that explains which colors correspond to which values.It was used earlier in this chapter because it makes the comparasion presentation with the other 2 plots more clean and consistent. 
 
-Question 4: What does the se argument to geom_smooth() do?
+###*Question 4*: What does the se argument to geom_smooth() do?
 It reconfirms the conditional arguement and determines whether or not to draw a confidence interval around the smoothing line.
 
-Question 5: Will these two graphs look different? Why/why not?
+###*Question 5*: Will these two graphs look different? Why/why not?
 
 ```{r}
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
@@ -262,9 +269,9 @@ ggplot() +
 
 No because they use the same data and mappings to produce the same plot. The ony difference is that the first one can avoid duplication by passing a set of mappings to ggplot() function to automatically reapply the global mappings to each geom in the graph.  
 
-**Extra credit: #6
+#**Extra credit**: #6
 
-Question 6: Recreate the R code necessary to generate the following graphs.
+###*Question 6*: Recreate the R code necessary to generate the following graphs.
 ```{r}
 ggplot(data = mpg, mapping = aes(x = displ, y = hwy)) + 
   geom_point(size=4) + 
@@ -303,15 +310,17 @@ ggplot(data=mpg, mapping=aes(x=displ,y=hwy))+
 
 ```
 
-Section 3.7.1:
+##**Section 3.7.1:**
 
-Question 2:What does geom_col() do? How is it different to geom_bar()?
+###*Question 2*:What does geom_col() do? How is it different to geom_bar()?
 
 ```{r}
 ?geom_col
 ```
 geom_col is one of two types of bar charts. It makes the heights of the bar represents values of the data.Meanwhile, geom_bar is another tye of bar chart that makes the height of the bar propositional to the number of cases in each group depending the weight of each value versus the weight of the sum of all values. 
 
+###**Answer these questions:**
+1. Look at the data graphics at the following link: What is a Data Scientist. Please briefly critique the designer’s choices. What works? What doesn’t work? What would you have done differently?
 
-
+The designer's choices have some workable and some unworkable features. It works since he uses some bar charts to present some percenatges, and spectrum of blue color to differitate among diffrent values. It does not work since it lacks of ohter colors to better presentation and some studies are not presented in any plots or bar charts that it lacks convinceable presentation to the audience.I would use some bar charts or plots and other colors to make it more presentable. 
 

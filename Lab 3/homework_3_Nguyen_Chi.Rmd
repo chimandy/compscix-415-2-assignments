@@ -2,29 +2,218 @@
 title: "COMPSCIX 415.2 Homework 3"
 author: "Chi Nguyen"
 date: "2/16/2019"
-output: html_document
+output:
+  html_document:
+    self_contained: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+My Github repository for my assignments can be found at this URL: 
+https://github.com/chimandy/compscix-415-2-assignments.git
 
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r load_packages, warning=FALSE, message=FALSE}
+library(mdsr)
+library(tidyverse)
+library(ggplot2)
 ```
 
-## Including Plots
+##**Section 3.8.1**:all exercises
 
-You can also embed plots, for example:
+###1. What is the problem with this plot? How could you improve it?
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+  geom_point()
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+The values of hwy and displ are rounded so the points appear on a grid and many points overlap each other. This problem is known as overplotting. This arrangement makes it hard to see where the mass of the data is.
+There are many data points overlapping each other and the issue makes it difficult to see where the mass of data is. To avoid overplotting problem, we can jitter the points to add a small amount of random noise to each point so we can spreads the points out. It will definitely improve the visualization because no two points are linkely to receive the same amount of random noise.
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) + 
+ geom_jitter()
+```
+
+###2. What paramteres to geom_jitter() control the amount of jittering ? 
+width and height. 
+
+###3. Compare and constrast geom_jitter () and geom_count()
+
+```{r}
+ggplot(data=mpg, mapping = aes(x=cty, y=hwy))+
+ geom_jitter()
+```
+
+```{r}
+ggplot(data=mpg, mapping = aes(x=cty, y=hwy))+
+ geom_count()
+```
+
+Coampared to random noise effect from geo_jitter(), geom_count() counts the number of obsevations at each location, then maps the count to point area. It makes larger points is equal to geom_point(). 
+
+###4. What's the default position adjusments for geom_boxpot()? Create a visualization of the mpg dataset that demonstrates it. 
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = class, y = hwy, color = drv))+
+ geom_boxplot(position = "dodge")
+```
+
+position = "dodge" places overlapping objects directly beside one another. This makes it easier to compare individual values
+##**Section 3.9.1**: #2 and #4 only
+
+###2. What does labs() do? Read the documentation.
+
+labs() adds labels to the graph.You can add a title, subtitle, and a label for the x and y axes, as well as caption.
+
+###4.What does the plot below tell you about the relationship between city and highway mpg? Why is coord_fixed() important? What does geom_abline() do?
+
+```{r}
+ggplot(data = mpg, mapping = aes(x = cty, y = hwy)) +
+ geom_point() + 
+ geom_abline() +
+ coord_fixed()
+```
+
+##**Section 4.4**: #1 and #2 only
+###1.Why does this code not work ?
+
+```{r}
+#my_variable <- 10
+#my_varıable
+
+```
+There is typo error on the second line so that it fails to execute. It should be corrected to my_variable instead of my_varıable.
+
+
+###2. Tweak each of the following R commands so that they run correctly:
+
+```{r}
+library(tidyverse)
+
+ggplot(data = mpg) + 
+ geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+The above R command is correct without any errors. 
+
+####Incorrect R command
+```{r}
+#fliter(mpg, cyl = 8)
+```
+
+The above R command is incorrect since fliter is typo and cyl=8 should be changed to ==8 . Therefore, it should be changed to as below:
+
+```{r}
+filter(mpg,cyl==8)
+
+```
+
+
+##**Section 5.2.4**: #1, #3 and #4 only
+
+```{r}
+library(nycflights13)
+library(tidyverse)
+```
+```{r}
+glimpse(flights)
+```
+
+```{r}
+flights
+```
+###1. Find all flights that
+
+####1.Had an arrival delay of two or more hours:
+```{r}
+filter(flights, arr_delay>=120)
+```
+
+
+####2.Flew to Houston (IAH or HOU)
+```{r}
+filter(flights,dest=="HOU"|dest=="IAH")
+```
+
+####3.Were operated by United, American, or Delta
+
+```{r}
+filter(flights, carrier=="UA"|carrier=="AA"|carrier=="DL")
+```
+
+####4.Departed in summer (July, August, and September)
+
+```{r}
+filter(flights, month>=7,month<=9)
+```
+
+####5.Arrived more than two hours late, but didn’t leave late
+
+```{r}
+filter(flights,arr_delay>=120,dep_delay<=0)
+```
+
+####6.Were delayed by at least an hour, but made up over 30 minutes in flight
+```{r}
+filter(flights, dep_delay>=60,dep_delay-arr_delay>=30)
+```
+
+####7.Departed between midnight and 6am (inclusive)
+
+```{r}
+filter(flights,dep_time>=0,dep_time<=600)
+```
+###3.How many flights have a missing dep_time? What other variables are missing? What might these rows represent?
+
+```{r}
+filter(flights,is.na(dep_time))
+```
+There are 8255 flights missing dep-time. They are also missing dep_delay, arr_time,arr_delay, and air_time. So looks like these flights are scheduled but never fly.  
+
+###4.Why is NA ^ 0 not missing? Why is NA | TRUE not missing? Why is FALSE & NA not missing? Can you figure out the general rule? (NA * 0 is a tricky counterexample!)
+
+
+These scenarios below show no missing:
+
+```{r}
+NA^0
+```
+
+NA^0- any number to the zero power is one is because any number to the zero power is just the product of no numbers at all, which is the multiplicative identity, 1.
+
+```{r}
+NA|TRUE
+```
+
+NA|TRUE- as long as on condition is TRUE, the result is TRUE. 
+
+```{r}
+FALSE & NA
+```
+NA represents a missing value, so the FALSE condition will overlook this absense of value. 
+
+```{r}
+NA*0
+```
+
+In general, NA represents an unknown value , so mising values are "contagious": almost any operation involving an unknown value will also be unknown. Therefore, NA*0 is NA. In conditional operation like FALSE & NA, missing valuese are simply ignored. 
+
+##**Section 5.4.1**: #1 and #3 only
+
+####1.Brainstorm as many ways as possible to select dep_time, dep_delay, arr_time, and arr_delay from flights
+
+```{r}
+select (flights, dep_time, dep_delay, arr_time,arr_delay)
+```
+
+####3. What does the one_of() function do? Why might it be helpful in conjunction with this vector?
+
+```{r}
+vars <- c("year", "month", "day", "dep_delay", "arr_delay")
+select(flights, one_of(vars))
+```
+
+The one_of() fucnton selects any variable which matches one of strings in the vector.
+

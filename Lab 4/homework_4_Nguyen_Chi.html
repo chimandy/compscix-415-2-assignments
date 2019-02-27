@@ -459,7 +459,6 @@ not_cancelled %&gt;%
 </div>
 <div id="compare-and-contrast-the-following-operations-on-a-data.frame-and-equivalent-tibble.-what-is-different-why-might-the-default-data-frame-behaviours-cause-you-frustration" class="section level3">
 <h3>2:Compare and contrast the following operations on a data.frame and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?</h3>
-<p>df &lt;- data.frame(abc = 1, xyz = “a”) df$x df[, “xyz”] df[, c(“abc”, “xyz”)]</p>
 <pre class="r"><code>df &lt;- data.frame(abc = 1, xyz = &quot;a&quot;)
 df$x</code></pre>
 <pre><code>## [1] a
@@ -471,20 +470,14 @@ df$x</code></pre>
 <pre><code>##   abc xyz
 ## 1   1   a</code></pre>
 <pre class="r"><code>df &lt;- tibble(abc = 1, xyz = &quot;a&quot;)
-df$x</code></pre>
-<pre><code>## Warning: Unknown or uninitialised column: 'x'.</code></pre>
-<pre><code>## NULL</code></pre>
-<pre class="r"><code>df[, &quot;xyz&quot;]</code></pre>
-<pre><code>## # A tibble: 1 x 1
-##   xyz  
-##   &lt;chr&gt;
-## 1 a</code></pre>
-<pre class="r"><code>df[, c(&quot;abc&quot;, &quot;xyz&quot;)]</code></pre>
+df$xyz</code></pre>
+<pre><code>## [1] &quot;a&quot;</code></pre>
+<pre class="r"><code>df</code></pre>
 <pre><code>## # A tibble: 1 x 2
 ##     abc xyz  
 ##   &lt;dbl&gt; &lt;chr&gt;
 ## 1     1 a</code></pre>
-<p>-Tibbles never do partial matching; data frames do. -Subsetting tibbles using [[ will always return a tibble; subsetting data frames using [[ can potentially return a vector.</p>
+<p>-Tibbles are designed so that you don’t accidentally overwhelm your console when you print large data frames. However, sometimes you need more output than the default display and some partial display, data frames will help.</p>
 </div>
 <div id="if-you-have-the-name-of-a-variable-stored-in-an-object-e.g.var---mpg-how-can-you-extract-the-reference-variable-from-a-tibble" class="section level3">
 <h3>3:If you have the name of a variable stored in an object, e.g. var &lt;- “mpg”, how can you extract the reference variable from a tibble?</h3>
@@ -504,8 +497,7 @@ mpg[[var]]</code></pre>
 </div>
 <div id="what-option-controls-how-many-additional-column-names-are-printed-at-the-footer-of-a-tibble" class="section level3">
 <h3>6:What option controls how many additional column names are printed at the footer of a tibble?</h3>
-<pre class="r"><code>getOption(&quot;tibble.max_extra_cols&quot;)</code></pre>
-<pre><code>## NULL</code></pre>
+<p>The n_extra argument determines the number of extra colums to print at the footer of a tible</p>
 </div>
 </div>
 <div id="section-12.3.3-2-3-and-4-only" class="section level2">
@@ -550,8 +542,7 @@ print(people)</code></pre>
 ## 3 Phillip Woods   age       50
 ## 4 Jessica Cordero age       37
 ## 5 Jessica Cordero height   156</code></pre>
-<pre class="r"><code>#spread(people,key,value)</code></pre>
-<p><em>Problem</em>: the observation name are spreading cross two rows with different values for 2 different variables of age and height for the same name. To tidy this up, we should add height column next to age column.</p>
+<p><em>Problem</em>: the observation name &quot; Phillip Woods&quot; are spreading cross two rows with different values for 2 different variables of age and height for the same name. To tidy this up, we should add height column next to age column.</p>
 <pre class="r"><code>people &lt;- tribble(
   ~name,             ~age,      ~height,   
   #-----------------|-----------|---------
@@ -599,8 +590,8 @@ preg_tidy</code></pre>
 <h2>Section 12.4.3: #1 and #2 only</h2>
 <div id="what-do-the-extra-and-fill-arguments-do-in-separate-experiment-with-the-various-options-for-the-following-two-toy-datasets." class="section level3">
 <h3>1. What do the extra and fill arguments do in separate()? Experiment with the various options for the following two toy datasets.</h3>
-<div id="the-first-dataset" class="section level4">
-<h4>The first dataset:</h4>
+<div id="the-1st-dataset" class="section level4">
+<h4>The 1st dataset:</h4>
 <p>The extra argument tells separate() what to do if there are too many pieces, and the fill argument tells it what to do if there aren’t enough. By defualt, seperate () drops extra values with a warning like below:</p>
 <pre class="r"><code>tibble(x = c(&quot;a,b,c&quot;, &quot;d,e,f,g&quot;, &quot;h,i,j&quot;)) %&gt;% 
   separate(x, c(&quot;one&quot;, &quot;two&quot;, &quot;three&quot;))</code></pre>

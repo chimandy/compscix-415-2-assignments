@@ -120,40 +120,20 @@ A data frame will print the entire contents. A tibble will only print (by defaul
 
 ###2:Compare and contrast the following operations on a data.frame and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?
 
+```{r}
 df <- data.frame(abc = 1, xyz = "a")
 df$x
 df[, "xyz"]
 df[, c("abc", "xyz")]
-
-```{r}
-df <- data.frame(abc = 1, xyz = "a")
-df$x
 ```
 
-```{r}
-df[, "xyz"]
-```
-
-```{r}
-df[, c("abc", "xyz")]
-```
 
 ```{r}
 df <- tibble(abc = 1, xyz = "a")
-df$x
+df$xyz
+df
 ```
-
-```{r}
-df[, "xyz"]
-```
-
-
-```{r}
-df[, c("abc", "xyz")]
-```
-
--Tibbles never do partial matching; data frames do.
--Subsetting tibbles using [[ will always return a tibble; subsetting data frames using [[ can potentially return a vector.
+-Tibbles are designed so that you don’t accidentally overwhelm your console when you print large data frames. However, sometimes you need more output than the default display and some partial display, data frames will help. 
 
 ###3:If you have the name of a variable stored in an object, e.g. var <- "mpg", how can you extract the reference variable from a tibble?
 
@@ -164,11 +144,7 @@ mpg[[var]]
 
 
 ###6:What option controls how many additional column names are printed at the footer of a tibble?
-
-```{r}
-getOption("tibble.max_extra_cols")
-
-```
+The n_extra argument determines the number of extra colums to print at the footer of a tible
 
 ##Section 12.3.3: #2, #3 and #4 only
 
@@ -209,11 +185,8 @@ people <- tribble(
 print(people)
 ```
 
-```{r}
-#spread(people,key,value)
-```
 
-*Problem*: the observation name are spreading cross two rows with different values for 2 different variables of age and height for the same name. To tidy this up, we should add height column next to age column. 
+*Problem*: the observation name " Phillip Woods" are spreading cross two rows with different values for 2 different variables of age and height for the same name. To tidy this up, we should add height column next to age column. 
 
 
 ```{r}
@@ -227,6 +200,7 @@ people <- tribble(
 
 print(people)
 ```
+
 ###4:Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?
 
 ```{r}
@@ -260,7 +234,7 @@ preg_tidy
 
 ###1. What do the extra and fill arguments do in separate()? Experiment with the various options for the following two toy datasets.
 
-####The first dataset:
+####The 1st dataset:
 The extra argument tells separate() what to do if there are too many pieces, and the fill argument tells it what to do if there aren't enough. By defualt, seperate () drops extra values with a warning like below:
 
 

@@ -1,0 +1,369 @@
+---
+title: "COMPSCIX 415.2 Homework 4"
+author: "Chi Nguyen"
+date: "2/24/2019"
+output:
+  html_document:
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+My Github repository for my assignments can be found at this URL: https://github.com/chimandy/compscix-415-2-assignments.git
+
+##Section 5.6.7 #2, #4 and #6 only. Extra Credit: Do #5
+###2. Come up with another approach that will give you the same output as not_cancelled %>% count(dest) and not_cancelled %>% count(tailnum, wt = distance) (without using count()).
+
+```{r}
+library(nycflights13)
+library(tidyverse)
+```
+
+Original Approach :
+```{r}
+not_cancelled <- flights %>%
+  filter(!is.na(dep_delay), !is.na(arr_delay))
+not_cancelled %>%
+  count(dest)
+```
+
+Another approach: 
+```{r}
+not_cancelled %>%
+  group_by(dest)%>%
+  summarize(n=n())
+```
+
+
+```{r}
+not_cancelled %>%
+  count(tailnum, wt = distance)
+```
+
+```{r}
+not_cancelled %>%
+  group_by(tailnum)%>%
+  summarise(n= sum (distance,na.rm = TRUE))
+```
+
+###4:Look at the number of cancelled flights per day. Is there a pattern? Is the proportion of cancelled flights related to the average delay?
+
+```{r}
+flights%>%
+  filter(is.na(dep_delay))%>%
+  count(day)
+```
+
+```{r}
+flights%>%
+  group_by(day) %>%
+  summarise (
+    prop_canceled= sum(is.na(dep_delay))/n (),
+    avg_delay=mean(dep_delay,na.rm= TRUE)
+  ) 
+```
+
+
+The higher proportional delay is, the bigger the avarage delay is . 
+
+###6:For each plane, count the number of flights before the first delay of greater than 1 hour.
+
+```{r}
+flights%>%
+  group_by(tailnum) %>%
+  mutate(row_num=row_number()) %>%
+  filter(arr_delay>60) %>%
+  summarise(first_hour_delay= first(row_num)-1)
+```
+
+###**Extra credit**
+
+###5. Which carrier has the worst delays? Challenge: can you disentangle the effects of bad airports vs. bad carriers? Why/why not? (Hint: think about flights %>% group_by(carrier, dest) %>% summarise(n()))
+
+```{r}
+flights %>%
+  group_by (carrier) %>%
+  summarise(mean_delay = mean (arr_delay, na.rm=TRUE)) %>%
+  arrange (desc (mean_delay))
+```
+
+It shows that F9 is the worst carrier. 
+
+```{r}
+filter(airlines, carrier=="F9")
+```
+Corresponding to F9 carrier, the result is Frontier Airlines Inc. 
+
+
+```{r}
+flights %>%
+  group_by(carrier, dest) %>%
+  summarize(mean_delay = mean(arr_delay, na.rm = TRUE)) %>%
+  group_by(carrier) %>%
+  summarize(mean_delay_mad = mad(mean_delay, na.rm = TRUE)) %>%
+  arrange(desc(mean_delay_mad))
+```
+
+##Section 10.5: #1, #2, #3 and #6 only
+###1:How can you tell if an object is a tibble? (Hint: try printing  mtcars, which is a regular data frame).
+```{r}
+print(mtcars)
+```
+
+
+```{r}
+print(as_tibble(mtcars))
+```
+
+A data frame will print the entire contents. A tibble will only print (by default) the first 10 rows and as many columns as will fit in the console.
+
+###2:Compare and contrast the following operations on a data.frame and equivalent tibble. What is different? Why might the default data frame behaviours cause you frustration?
+
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+df[, "xyz"]
+df[, c("abc", "xyz")]
+
+```{r}
+df <- data.frame(abc = 1, xyz = "a")
+df$x
+```
+
+```{r}
+df[, "xyz"]
+```
+
+```{r}
+df[, c("abc", "xyz")]
+```
+
+```{r}
+df <- tibble(abc = 1, xyz = "a")
+df$x
+```
+
+```{r}
+df[, "xyz"]
+```
+
+
+```{r}
+df[, c("abc", "xyz")]
+```
+
+-Tibbles never do partial matching; data frames do.
+-Subsetting tibbles using [[ will always return a tibble; subsetting data frames using [[ can potentially return a vector.
+
+###3:If you have the name of a variable stored in an object, e.g. var <- "mpg", how can you extract the reference variable from a tibble?
+
+```{r}
+var<-"hwy"
+mpg[[var]]
+```
+
+
+###6:What option controls how many additional column names are printed at the footer of a tibble?
+
+```{r}
+getOption("tibble.max_extra_cols")
+
+```
+
+##Section 12.3.3: #2, #3 and #4 only
+
+###2. Why does this code fail?
+
+*Incorrect code*:
+
+```{r}
+#table4a %>% 
+  #gather(1999, 2000, key = "year", value = "cases")
+#> Error in inds_combine(.vars, ind_list): Position must be between 0 and n
+
+```
+
+
+The above code fails because 1999 and 2000 are not syntactic names becuase they don't start with letters. When selecting variables from a data frame, tidyverse funcyions will interpret numbers, like 1999 and 2000, as column numbers. so we have to surround them in backtickes as below code to make it work or provide them as strings 
+
+*Correct code*:
+```{r}
+table4a %>% 
+  gather('1999', '2000', key = "year", value = "cases")
+```
+
+
+###3:Why does spreading this tibble fail? How could you add a new column to fix the problem?
+
+
+```{r}
+people <- tribble(
+  ~name,             ~key,    ~value,
+  #-----------------|--------|------
+  "Phillip Woods",   "age",       45,
+  "Phillip Woods",   "height",   186,
+  "Phillip Woods",   "age",       50,
+  "Jessica Cordero", "age",       37,
+  "Jessica Cordero", "height",   156
+)
+print(people)
+```
+
+```{r}
+#spread(people,key,value)
+```
+
+*Problem*: the observation name are spreading cross two rows with different values for 2 different variables of age and height for the same name. To tidy this up, we should add height column next to age column. 
+
+
+```{r}
+people <- tribble(
+  ~name,             ~age,      ~height,   
+  #-----------------|-----------|---------
+  "Phillip Woods",   45 ,        186,
+  "Phillip Woods",   50 ,        NA,
+  "Jessica Cordero", 37,         156
+)
+
+print(people)
+```
+###4:Tidy the simple tibble below. Do you need to spread or gather it? What are the variables?
+
+```{r}
+preg <- tribble(
+  ~pregnant, ~male, ~female,
+  "yes",     NA,    10,
+  "no",      20,    12
+)
+preg
+```
+
+
+To tidy the preg tibble, we need to use gather(). The variables in this data are:
+- sex ("female", "male")
+-pregnant("yes", "no")
+-count, which is a non-negetive integer representing the number of observations.
+
+The observations in this data are unique combinations for sex and pregnancy status.
+Also, since male never gets pregnant with NA value, we should remove the misssing value NA in the code
+
+```{r}
+preg_tidy<-preg %>%
+  gather(male, female, key="sex", value="count", na.rm=TRUE)
+
+preg_tidy
+```
+
+
+
+##Section 12.4.3: #1 and #2 only
+
+###1. What do the extra and fill arguments do in separate()? Experiment with the various options for the following two toy datasets.
+
+####The first dataset:
+The extra argument tells separate() what to do if there are too many pieces, and the fill argument tells it what to do if there aren't enough. By defualt, seperate () drops extra values with a warning like below:
+
+
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>% 
+  separate(x, c("one", "two", "three"))
+```
+
+# A tibble: 3 x 3
+  one   two   three
+  <chr> <chr> <chr>
+1 a     b     c    
+2 d     e     f    
+3 h     i     j    
+Warning message:
+Expected 3 pieces. Additional pieces discarded in 1 rows [2]. 
+
+by adding the argument, extra="drop",  we can produce the same result as above but without the warning as below:
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%
+  separate(x, c("one", "two", "three"), extra = "drop")
+```
+
+# A tibble: 3 x 3
+  one   two   three
+  <chr> <chr> <chr>
+1 a     b     c    
+2 d     e     f    
+3 h     i     j    
+ 
+In addition in this dataset, the extra elements "f,g" in value" d,e,f,g" can appear in the 3rd column wihout be missed by adding extra=merge 
+```{r}
+tibble(x = c("a,b,c", "d,e,f,g", "h,i,j")) %>%
+  separate(x, c("one", "two", "three"), extra = "merge")
+```
+
+ # A tibble: 3 x 3
+  one   two   three
+  <chr> <chr> <chr>
+1 a     b     c    
+2 d     e     f,g  
+3 h     i     j   
+
+####2nd dataset:
+
+```{r}
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>% 
+  separate(x, c("one", "two", "three"))
+```
+
+# A tibble: 3 x 3
+  one   two   three
+  <chr> <chr> <chr>
+1 a     b     c    
+2 d     e     NA   
+3 f     g     i    
+Warning message:
+Expected 3 pieces. Missing pieces filled with `NA` in 1 rows [2]. 
+In this example, one of the values, "d,e", has only two elements instead of three.. b=By adding fill= " right" or fill= "left" it fills columns with missing values but emits a warning from the right side or from the left side. 
+
+```{r}
+
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>%
+  separate(x, c("one", "two", "three"), fill = "left")
+```
+
+
+```{r}
+tibble(x = c("a,b,c", "d,e", "f,g,i")) %>%
+  separate(x, c("one", "two", "three"), fill = "right")
+```
+
+# A tibble: 3 x 3
+  one   two   three
+  <chr> <chr> <chr>
+1 a     b     c    
+2 d     e     NA   
+3 f     g     i    
+
+###2:Both unite() and separate() have a remove argument. What does it do? Why would you set it to FALSE?
+The remove argument discards input columns in the result data frame. You would set it to FALSE if you want to create a new variable, but keep the old one.
+
+
+Answer these questions:
+
+Follow these steps:
+- Download the baby_names.txt file from Canvas which is in the Homework 4 assignment section.
+- Load this file into R correctly and take a glimpse of the output.
+- Export this file as a csv file and call it ‘baby_names.csv’.
+- Reload the baby_names.csv file and take another glimpse.
+- Show all of your code and the output. There should be two data import lines of code, one data export line of code, and two glimpses of the data.
+
+
+
+```{r}
+file_path <- 'baby_names.txt'
+baby_data <- read.table(file_path, sep = "|")
+glimpse(baby_data)
+```
+
+```{r}
+write.csv(baby_data, file = "baby_names.csv")
+baby_data2 <- read_csv("baby_names.csv")
+glimpse(baby_data2)
+```
+

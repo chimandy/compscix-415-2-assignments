@@ -1,0 +1,385 @@
+---
+title: "COMPSCIX 415.2 Homework 5/Midterm"
+author: "Chi Nguyen"
+date: "3/2/2019"
+output:
+  html_document:
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+My Github repository for my assignments can be found at this URL: https://github.com/chimandy/compscix-415-2-assignments.git
+#*Exercises (Total Points - 30)*
+##*RStudio and R Markdown (3 points)*
+
+##*The tidyverse packages (3 points)*
+  1. Can you name which package is associated with each task below?
+a. Plotting -ggplot2 R package
+b. Data munging/wrangling - dplyr package
+c. Reshaping (speading and gathering) data: tidyr package
+d. Importing/exporting data : 
+ Data import: readr, data.table package
+ Data export:readr 
+ 
+  2. Now can you name two functions that you’ve used from each package that you listed above for these
+tasks?
+a. Plotting:
+
+   1. ggplot
+   2. geom_smooth()
+   3. geom_point()
+
+b. Data munging/wrangling:
+
+
+   1. select() - take a subset of columns
+
+   2. filter() - take a subset of rows
+ 
+   3. mutate() - add or modify existing columns
+
+   4. arrange() - sort the rows
+
+   5. summarize() - aggregate the data across rows (by groups)
+   
+c. Reshaping data:
+   1. gather()
+   2. spread()
+   3. seperate()
+
+d.Importing/exporting data -
+Importing data :
+
+  1. read_csv()
+  2. read_delim()
+Exporting data: 
+  3. write_csv() 
+  4. write_tsv() - to write to a tab delimited file
+  5. write_delim() - to choose a delimiter
+ 
+
+##*R Basics* (1.5 points)*
+  1.Fix this code **with the fewest number of changes possible** so it works:
+Incorrect code :
+```{r}
+#My_data.name___is.too00ooLong! <- c( 1 , 2   , 3 )
+```
+
+Correct code: 
+```{r}
+My_data.name___is.too00ooLong <- c( 1 , 2   , 3 )
+
+```
+  
+  2.Fix this code so it works:
+Incorrect code: 
+
+```{r}
+#my_string <- C('has', 'an', 'error', 'in', 'it)
+```
+
+Correct code: 
+```{r}
+my_string <-c('has', 'an', 'error', 'in', 'it')
+```
+
+  3.Look at the code below and comment on what happened to the values in the vector.
+```{r}
+
+```
+  
+```{r}
+my_vector <- c(1, 2, '3', '4', 5)
+my_vector
+```
+The vector is converted to a character vector. Vectors, just like columns of a tibble, cannot have multiple types.
+
+
+##*Data import/export (3 points)*
+  1. Download the rail_trail.txt file from Canvas (in the Midterm Exam section) and successfully import it
+into R. Prove that it was imported successfully by including your import code and taking a glimpse of
+the result.
+```{r}
+#file_path <- 'rail_trail.txt'
+#rail_data <- read.table(file_path, sep = "|")
+#glimpse(rail_data)
+```
+
+
+  2.Export the file into a comma-separated file and name it “rail_trail.csv”. Make sure you define the path
+correctly so that you know where it gets saved. Then reload the file. Include your export and import
+code and take another glimpse.
+
+
+```{r}
+#write.csv(rail_trail, file = 'rail_trail.csv')
+#rail_trail_csv <- read_csv('rail_trail.csv')
+#glimpse(rail_trail_csv)
+```
+
+```{r}
+file_path<-'rail_trail.txt'
+file_path<-'rail_trail.csv'
+```
+
+
+##*Visualization (6 points)*
+###1. Critique this graphic: give only three examples of what is wrong with this graphic. Be concise.
+a. the graphics are very sepearated amongs variables and observations and unable to represent the holistic view to analyze the meaning of whole dataset. 
+  
+b. some counts of result outputs (Yes/No) from gender categories or groups ( between men and women ) might have been duplicated with counts coming from age categories. These data needs to be tidy up. 
+  
+c.The lack of color codes to distinguish among different age categories and the missing counts of "no responses" to either Yes or No from all categories. 
+###2:Reproduce this graphic using the diamonds data set.
+
+```{r}
+#diamonds
+```
+
+
+```{r}
+library(ggplot2)
+ggplot(data = diamonds, mapping = aes(x = cut, y = carat, fill = color)) +
+geom_boxplot(position="identity")+
+coord_flip()+
+xlab('CUT OF DIAMOND')+
+ylab('CARAT OF DIAMOND')
+```
+####3.3. The previous graphic is not very useful. We can make it much more useful by changing one thing about it. Make the change and plot it again.
+
+ggplot(data = diamonds, mapping = aes(x = cut, y = carat, fill = color)) +
+geom_boxplot(position="identity")+
+coord_flip()+
+xlab('CUT OF DIAMOND')+
+ylab('CARAT OF DIAMOND')
+```  
+```{r}
+ggplot(data = diamonds, mapping = aes(x = cut, y = carat, fill = color)) +
+geom_boxplot(position="identity")+
+coord_flip()+
+xlab('CUT OF DIAMOND')+
+ylab('CARAT OF DIAMOND')
+```
+```
+  
+##*Data munging and wrangling (6 points)*
+
+###1. Is this data “tidy”? If yes, leave it alone and go to the next problem. If no, make it tidy. Note: thisdata set is called table2 and is available in the tidyverse package. It should be ready for you to use after you’ve loaded the tidyverse package.
+
+
+*Problem*:  This data above is not tidy because each observation name like "Afghanistan", "Brazil", "China""  under country category with the same year are spreading cross two rows with 2 different values for cases and population under type variables. To tidy this up, we should spread "cases" and "population"under "type" variable into 2 seperated variables " cases" and population as below:
+
+*Untidy orginal table2 data set*
+```{r}
+library(tidyverse)
+glimpse(table2)
+```
+
+*Tidy table2 data set*
+
+```{r}
+table2_tidy <-table2 %>%
+    spread(key = type, value = count)
+```
+```{r}
+table2_tidy
+```
+
+
+
+###2.Create a new column in the diamonds data set called price_per_carat that shows the price of each diamond per carat (hint: divide). Only show me the code, not the output.
+
+```{r}
+diamonds%>%
+  mutate(price_per_carat=price/carat)
+  
+```
+
+###3. For each cut of diamond in the diamonds data set, how many diamonds, and what proportion, have aprice > 10000 and a carat < 1.5? There are several ways to get to an answer, but your solution must use the data wrangling verbs from the tidyverse in order to get credit.
+
+```{r}
+diamonds%>%
+  group_by(cut)%>%
+  summarize(count_cut_of_diamond=sum(price>10000 & carat<1.5),
+            prop_of_diamond=count_cut_of_diamond/n())
+```
+
+
+Below is the tibble resul for the above code:
+
+# A tibble: 5 x 3
+  cut       count_cut_of_diamond prop_of_diamond
+  <ord>                    <int>           <dbl>
+1 Fair                         4         0.00248
+2 Good                        17         0.00347
+3 Very Good                  155         0.0128 
+4 Premium                    173         0.0125 
+5 Ideal                      485         0.0225 
+
+• Do the results make sense? Why?
+
+The results do make senses in term of price over 10,000 and carat size bigger than 1.5 consideration because the higher price of diamond that is paid over $10,000 and the bigger zize of carat is picked, the higher chance the quality of the cut to be categorized as very good to ideal. 
+• Do we need to be wary of any of these numbers? Why?
+
+Yes, we do need to wary and learn these numbers further across the whole data set to find out if the previous study is also true for the whole data set. If we try to find out the avg_price_per_carat for each cut of diamond, it shows as below that very good and premium catogries have higher avarage price than ideal category. It proves that it is not necessarily true and certain that the higher price is paid for same size of carat, the higher quality of the cut will be in general.  
+
+```{r}
+diamonds %>% 
+  mutate(price_per_carat=price/carat)%>%
+  group_by(cut) %>%
+  summarize(avg_price_per_carat = mean(price_per_carat, na.rm = TRUE))
+```
+
+# A tibble: 5 x 2
+  cut       avg_price_per_carat
+  <ord>                   <dbl>
+1 Fair                    3767.
+2 Good                    3860.
+3 Very Good               4014.
+4 Premium                 4223.
+5 Ideal                   3920.
+> 
+##*EDA (6 points)*
+Take a look at the txhousing data set that is included with the ggplot2 package and answer these questions:
+
+```{r}
+txhousing
+```
+
+```{r}
+glimpse(txhousing)
+```
+
+
+1. During what time period is this data from?
+
+
+```{r}
+year_and_month_desc<-txhousing %>% 
+  arrange(desc(year), desc(month))
+
+year_and_month_desc%>%head(1)
+```
+
+With descending arrangement of year and month, it shows the lastest data is coming from 07/2015
+
+```{r}
+
+year_and_month_desc%>%tail(1)
+```
+
+By looking up for the last data from year_and_month_desc table, it shows the earliest date was 01/2000
+
+As a result, the time period of this data is between 01/2000 (Jan of year 2000) to 07/2015 ( July of year 2015),
+
+2. How many cities are represented?
+
+```{r}
+city_col<-txhousing$city
+unique(city_col)
+tibble(unique(city_col))
+```
+
+It shows there are 46 unique rows couting for 46 unique cities representing in this data
+
+
+3. Which city, month and year had the highest number of sales?
+
+```{r}
+sales_rank<-txhousing%>%
+  arrange(desc(sales))
+
+sales_rank
+```
+```{r}
+unique(sales_rank)%>%head(1)
+```
+
+
+The code above shows the highest sales comes from Houston in 07/2015(July of year 2015)
+
+4. What kind of relationship do you think exists between the number of listings and the number of sales?
+
+Check your assumption and show your work.
+
+
+```{r}
+ggplot(data = txhousing, mapping = aes(x = listings, y = sales))+
+  geom_point(aes(color=city))+
+  geom_smooth(aes(group=city),se = FALSE)
+
+```
+
+
+```{r}
+ggplot(data=txhousing, mapping = aes(x = listings, y = sales))+
+ geom_point() + 
+ geom_abline() +
+ coord_fixed()
+```
+
+
+By 2 plots above shows that there is negative correlatation between number of listings and number of sales since the points are scattering below the upard trend.
+
+5. What proportion of sales is missing for each city? 
+the sales per listing is missed
+6. Looking at only the cities and months with greater than 500 sales:
+• Are the distributions of the median sales price (column name median), when grouped by city, different? The same? Show your work.
+diamonds%>%
+  
+
+
+
+```{r}
+sales_over_500<-txhousing %>%
+  group_by(city)%>%
+  filter(sales>=500)
+
+sales_over_500
+```
+
+```{r}
+ggplot(data=txhousing, mapping = aes(x = median, y = sales))+
+ geom_point(aes(color=city))+
+ geom_smooth(aes(group=city),se = FALSE)
+```
+
+
+```{r}
+ggplot(data=sales_over_500, mapping = aes(x = median, y = sales))+
+ geom_point(aes(color=city))+
+ geom_smooth(aes(group=city),se = FALSE)
+```
+
+
+Yes I see a significant positive correlation between median and sales when sales is over 500. 
+• Any cities that stand out that you’d want to investigate further?
+```{r}
+
+```
+
+Houston shows stands out the most portive correlation between median and sales numebers and we need to investigate further  
+
+• Why might we want to filter out all cities and months with sales less than 500?
+
+```{r}
+sales_less_than_500<-txhousing %>%
+  group_by(city)%>%
+  filter(sales<500)
+
+sales_less_than_500
+```
+
+
+```{r}
+ggplot(data=sales_less_than_500, mapping = aes(x = median, y = sales))+
+ geom_point(aes(color=city))+
+ geom_smooth(aes(group=city),se = FALSE)
+```
+
+It is nenessary to investigate all sales less than 500 because there might be correlation between median and sales numbers 
+##*Git and Github (1.5 points)*
+
+

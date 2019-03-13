@@ -1,0 +1,203 @@
+---
+title: "COMPSCIX 415.2 Homework 6"
+author: "Chi Nguyen"
+date: "3/8/2019"
+output:
+  html_document:
+    self_contained: true
+---
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+My Github repository for my assignments can be found at this URL: https://github.com/chimandy/compscix-415-2-assignments.git
+
+#*Exercises*
+
+##*Exercise 1*
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(mosaicData)
+
+```
+```{r}
+glimpse(Whickham)
+```
+###1. What variables are in this data set?
+There are 3 variables
+
+###2. How many observations are there and what does each represent ?
+There are 1,314 observations
+
+###3. Create a table (use the R code below as a guide) and a visualization of the relationship between smoking status and outcome, ignoring age. What do you see? Does it make sense?
+a. Table:
+
+```{r}
+Whickham %>% count(smoker,outcome)
+```
+
+b. Visualization:
+
+```{r}
+Whickham %>% count( smoker , outcome ) %>% ggplot(aes(x=smoker, y = n)) + 
+  geom_bar(aes(fill = outcome), stat="identity") + 
+  xlab("smoker status") + ylab("count")
+```
+
+
+Based on the table and visualization, it shows that the overall pencentage of Alive compared to dead outcome for Smoker status "Yes" is slightly greater than the overall percentage of Alive status compared to dead outcome for smoker status "No". The result is kind of bias and does not make sense to believe that the smoking group has higher chance to alive compared to non-smoking group.  
+###4.Recode the age variable into an ordered factor with three categories: age <= 44, age > 44 & age <= 64, and age > 64. Now, recreate visualization from above, but facet on your new age factor. What do you see? Does it make sense?
+
+```{r}
+
+age_cat <-case_when(Whickham$age <=44 ~'<=44',
+                        Whickham$age> 44 & Whickham$age<=64 ~'44<x<=64',
+                        Whickham$age> 64 ~'>64')
+
+age_fct<-factor (age_cat, ordered = TRUE)
+class(age_fct)
+age_fct<-fct_relevel(age_fct, '<=44','44<x<=64','>64')
+levels(age_fct) 
+age_df<-as.data.frame(age_fct)
+data_frame<-merge(Whickham, age_fct, by = "row.names", all = TRUE)
+data_frame%>% count (smoker,outcome,y)%>%
+  ggplot(aes(x=smoker, y=n))+
+  geom_bar(aes(fill=outcome), stat="identity")+
+  facet_wrap(~y)
+       
+```
+
+
+By categorizing into different age group, probability of being alive for non smoker is higher than the smoker in age group from no more than 44 years old to no more than 64 . However, the group of older than 64 shows probabiity of being alive regardless smoker status is very small since it is the againg group and the chance of being alive is very thin. 
+
+##*Excercise 2*
+
+The Central Limit Theorem states that the sampling distribution of sample means is approximately Normal, regardless of the distribution of your population. For this exercise our population distribution will be a Gamma(1,2) distribution, and we’ll show that the sampling distribution of the mean is in fact normally distributed.
+
+###1. Generate a random sample of size n = 10000 from a gamma(1,2) distribution and plot a histogram or density curve. Use the code below to help you get your sample.
+
+
+
+
+```{r}
+library(tidyverse)
+n <- 10000
+gamma_samp <- tibble(x = rgamma(n, shape = 1, scale = 2))
+```
+
+```{r}
+?rgamma
+```
+
+
+###2. What is the mean and standard deviation of your sample? They should both be close to 2 because for a gamma distribution:
+mean = shape x scale
+variance = shape x scale^2
+
+```{r}
+mean_samp <- gamma_samp %>% .[['x']] %>% mean()
+mean_samp
+```
+
+The mean is 1.993617
+
+```{r}
+sd_samp <- gamma_samp %>% .[['x']] %>% sd()
+sd_samp
+```
+
+The standard deviation is 2.004735
+
+
+###3. Pretend the distribution of our population of data looks like the plot above. Now take a sample of size n = 30 from a Gamma(1,2) distribution, plot the histogram or density curve, and calculate the mean and standard deviation.
+
+```{r}
+
+gamma_samp %>% sample_n(30) %>% 
+  summarize(mean_x = mean(x, na.rm = TRUE),
+            sd_x = sd(x, na.rm = TRUE))
+```
+
+
+```{r}
+gamma_samp %>% sample_n(30)%>% ggplot()+
+    geom_histogram(aes(x = x), binwidth=0.5)+
+    theme_bw()
+```
+
+
+###4. Take a sample of size n = 30, again from the Gamma(1,2) distribution, calculate the mean, and assign it to a vector named mean_samp. Repeat this 10000 times!!!! The code below might help.
+
+
+```{r}
+# create a vector with 10000 NAs
+mean_samp <- rep(NA, 10000)
+
+# start a loop
+for(i in 1:10000) {
+  g_samp <- rgamma(30, shape = 1, scale = 2)
+  mean_samp[i] <- mean(g_samp)
+}
+# Convert vector to a tibble
+mean_samp <- tibble(mean_samp)
+```
+
+###5.Make a histogram of your collection of means from above (mean_samp).
+
+```{r}
+mean_samp %>% ggplot()+
+  geom_histogram(aes(x=mean_samp),binwidth = 0.1)
+```
+
+
+###6.Calculate the mean and standard deviation of all of your sample means.
+
+```{r}
+as.tibble(mean_samp)
+```
+
+```{r}
+
+mean_samp_means<-mean(mean_samp$mean_samp)
+sd_samp_means <-sd(mean_samp$mean_samp)
+mean_samp_means
+sd_samp_means
+```
+
+
+###7. Did anything surprise you about your answers to #6?
+
+
+In our case (σ= 2, N = 30), standard error=σ/root square of N= 0.365 and this result is pretty close to the result above of 0.36663506 standard deviation, plus the mean result is very close to 2. Therefore, there should be no surprise. 
+
+
+
+###8. According to the Central Limit Theorem, the mean of your sampling distribution should be very close to 2, and the standard deviation of your sampling distribution should be close to σn‾√=230‾‾‾√=0.365. Repeat #4-#6, but now with a sample of size n = 300 instead. Do your results match up well with the theorem?
+```{r}
+# create a vector with 10000 NAs
+mean_samp <- rep(NA, 10000)
+
+# start a loop
+for(i in 1:10000) {
+  g_samp <- rgamma(300, shape = 1, scale = 2)
+  mean_samp[i] <- mean(g_samp)
+}
+# Convert vector to a tibble
+mean_samp<- tibble(mean_samp)
+```
+
+```{r}
+mean_samp %>% ggplot()+
+  geom_histogram(aes(x=mean_samp))
+```
+
+```{r}
+mean_samp_means<-mean(mean_samp$mean_samp)
+sd_samp_means <-sd(mean_samp$mean_samp)
+mean_samp_means
+sd_samp_means
+```
+
+In our case (σ= 2, N = 300), standard error=σ/root square of N= 0.115470107 and this result is pretty close to the result above of 0.1165919 standard deviation, plus the mean result is very close to 2. Therefore, results match up well with the Central Limit Theorem
+

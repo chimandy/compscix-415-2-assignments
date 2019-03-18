@@ -1,0 +1,182 @@
+---
+title: "COMPSCIX 415.2 Homework 7"
+author: "Chi Nguyen"
+date: "3/16/2019"
+output:
+  html_document:
+    self_contained: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+My Github repository for my assignments can be found at this URL: https://github.com/chimandy/compscix-415-2-assignments.git
+
+```{r}
+library(broom)
+library(tidyverse)
+library(ggplot2)
+```
+
+
+###*Exercise 1*
+
+Load the train.csv dataset into R. How many observations and columns are there?
+```{r}
+file_path<-'train.csv'
+train_data<- read_csv(file='train.csv')
+glimpse (train_data)
+
+```
+
+There are 1,460 observations and 81 variables. 
+
+###*Excercise 2*
+
+Normally at this point you would spend a few days on EDA, but for this homework we will do some very basic EDA and get right to fitting some linear regression models.
+
+Our target will be SalePrice.
+
+1. Visualize the distribution of SalePrice.
+
+```{r}
+unique(train_data$SalePrice)
+```
+
+
+```{r}
+train_data%>% ggplot()+
+    geom_histogram(aes(x =SalePrice))
+```
+
+2. Visualize the covariation between SalePrice and Neighborhood.
+
+```{r}
+unique(train_data$Neighborhood)
+```
+
+
+```{r}
+ggplot(data=train_data)+
+  geom_histogram(aes(x = SalePrice, fill = Neighborhood))
+```
+
+
+3. Visualize the covariation between SalePrice and OverallQual.
+
+```{r}
+unique(train_data$OverallQual)
+```
+
+
+```{r}
+ggplot(data=train_data)+
+  geom_histogram(aes(x = SalePrice, fill = OverallQual))
+```
+
+###*Exercise 3*
+Our target is called SalePrice. First, we can fit a simple regression model consisting of only the intercept (the average of SalePrice). Fit the model and then use the broom package to take a look at the coefficient,compare the coefficient to the average value of SalePrice, and
+take a look at the R-squared.
+
+
+```{r}
+mean_SalePrice<-mean(train_data$SalePrice)
+sd_SalePrice <-sd(train_data$SalePrice)
+mean_SalePrice
+sd_SalePrice
+```
+```{r}
+train_data_1<-train_data%>%mutate(mean_SalePrice)
+(train_lm <- lm(formula =SalePrice ~mean_SalePrice, data = train_data_1))
+
+```
+
+```{r}
+tidy(train_lm)
+```
+
+```{r}
+summary(train_lm)
+
+```
+
+```{r}
+glance(train_lm)
+```
+
+
+The coefficient is equal to the avarage value of SalePrice ( both are equal to 180921.2) and the R square is zero.
+
+###*Exercise 4*
+Now fit a linear regression model using GrLivArea, OverallQual, and Neighborhood as the features. Don’t forget to look at data_description.txt to understand what these variables mean. Ask yourself these questions before fitting the model:
+
+What kind of relationship will these features have with our target?
+Can the relationship be estimated linearly?
+Are these good features, given the problem we are trying to solve?
+After fitting the model, output the coefficients and the R-squared using the broom package.
+
+
+
+
+```{r}
+train_data_2<-train_data_1%>%mutate(Neighborhood_fct=factor(Neighborhood, ordered=FALSE))
+train_mult_lm <- lm(SalePrice ~ mean_SalePrice + GrLivArea + OverallQual + Neighborhood, data = train_data_2)
+tidy(train_mult_lm)
+```
+```{r}
+glance(train_mult_lm)
+```
+Coefficient= -34829.2399
+R square = 0.7868484
+Answer these questions:
+
+How would you interpret the coefficients on GrLivArea and OverallQual?
+
+```{r}
+-34829.2399+ 55.5645+ 20951.4249
+```
+
+
+or every one unit increase in average value of SalePrice, the SalePrice increases, on average, by $-34829.2399+ 55.5645+ 20951.4249= -13822.25, controlling for all other features, i.e. assuming all other features are held constant.
+How would you interpret the coefficient on NeighborhoodBrkSide?
+
+```{r}
+-13025.4529--43358.8812	
+```
+
+We would say that the mean price difference between NeighborhoodBrkSide and NeighborhoodBrDale is $30333.43.
+
+*Are the features significant?*
+
+The P value of these features are not equal to zero so these features are not significant
+*Are the features practically significant?*
+
+This is a question that depends on the data, and your knowledge of it.
+
+
+
+*Is the model a good fit?*
+since we have larger R^2 when we add more features, the model fits the data better
+
+###*Excercise 6*
+
+One downside of the linear model is that it is sensitive to unusual values because the distance incorporates a squared term. Fit a linear model to the simulated data below (use y as the target and x as the feature), and look at the resulting coefficients and R-squared. Rerun it about 5-6 times to generate different simulated datasets. What do you notice about the model’s coefficient on x and the R-squared values?
+
+```{r}
+sim1a <- tibble(
+  x = rep(1:10, each = 3),
+  y = x * 1.5 + 6 + rt(length(x), df = 2)
+)
+as.tibble(sim1a)
+```
+```{r}
+sim1a_lm <- lm(formula =y ~x, data = sim1a)
+tidy(sim1a_lm)
+```
+
+```{r}
+glance(sim1a_lm)
+```
+
+

@@ -522,29 +522,29 @@ as.tibble(sim1a)</code></pre>
 <pre><code>## # A tibble: 30 x 2
 ##        x     y
 ##    &lt;int&gt; &lt;dbl&gt;
-##  1     1  6.14
-##  2     1  7.67
-##  3     1  9.51
-##  4     2 10.7 
-##  5     2  9.03
-##  6     2 11.3 
-##  7     3 12.0 
-##  8     3 11.8 
-##  9     3  8.84
-## 10     4 11.0 
+##  1     1  1.30
+##  2     1  4.28
+##  3     1  5.95
+##  4     2 11.6 
+##  5     2  8.23
+##  6     2 10.3 
+##  7     3 10.1 
+##  8     3  9.27
+##  9     3 15.9 
+## 10     4 12.1 
 ## # … with 20 more rows</code></pre>
 <pre class="r"><code>sim1a_lm &lt;- lm(formula =y ~x, data = sim1a)
 tidy(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 2 x 5
-##   term        estimate std.error statistic  p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)     8.47     1.98       4.29 0.000195
-## 2 x               1.26     0.319      3.95 0.000480</code></pre>
+##   term        estimate std.error statistic      p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
+## 1 (Intercept)     6.12     1.21       5.06 0.0000234   
+## 2 x               1.40     0.195      7.17 0.0000000844</code></pre>
 <pre class="r"><code>glance(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 1 x 11
 ##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.358         0.335  5.01      15.6 4.80e-4     2  -89.9  186.  190.
+## 1     0.647         0.635  3.06      51.4 8.44e-8     2  -75.1  156.  160.
 ## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 </div>
 

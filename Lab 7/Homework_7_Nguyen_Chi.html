@@ -194,12 +194,12 @@ $(document).ready(function () {
 <p>My Github repository for my assignments can be found at this URL: <a href="https://github.com/chimandy/compscix-415-2-assignments.git" class="uri">https://github.com/chimandy/compscix-415-2-assignments.git</a></p>
 <pre class="r"><code>library(broom)
 library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.1.0     ✔ purrr   0.3.0
 ## ✔ tibble  2.0.1     ✔ dplyr   0.7.8
 ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
 ## ✔ readr   1.3.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ───────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ───────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(ggplot2)</code></pre>
@@ -522,29 +522,29 @@ as.tibble(sim1a)</code></pre>
 <pre><code>## # A tibble: 30 x 2
 ##        x     y
 ##    &lt;int&gt; &lt;dbl&gt;
-##  1     1  8.42
-##  2     1  8.24
-##  3     1  6.31
-##  4     2  9.07
-##  5     2  8.55
-##  6     2  7.89
-##  7     3 20.8 
-##  8     3 12.5 
-##  9     3 11.1 
-## 10     4 11.9 
+##  1     1  7.56
+##  2     1  7.86
+##  3     1  6.55
+##  4     2 11.2 
+##  5     2 12.0 
+##  6     2 12.6 
+##  7     3 10.2 
+##  8     3  7.93
+##  9     3 11.0 
+## 10     4 12.0 
 ## # … with 20 more rows</code></pre>
 <pre class="r"><code>sim1a_lm &lt;- lm(formula =y ~x, data = sim1a)
 tidy(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 2 x 5
-##   term        estimate std.error statistic       p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;         &lt;dbl&gt;
-## 1 (Intercept)     7.09     0.982      7.23 0.0000000725 
-## 2 x               1.32     0.158      8.37 0.00000000415</code></pre>
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)     7.31     0.749      9.75 1.67e-10
+## 2 x               1.30     0.121     10.8  1.73e-11</code></pre>
 <pre class="r"><code>glance(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.715         0.704  2.49      70.1 4.15e-9     2  -68.9  144.  148.
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.806         0.799  1.90      117. 1.73e-11     2  -60.8  128.  132.
 ## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 </div>
 

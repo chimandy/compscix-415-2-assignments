@@ -202,38 +202,7 @@ library(tidyverse)</code></pre>
 <pre><code>## ── Conflicts ───────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
-<pre class="r"><code>library(ggplot2)
-library(mdsr)</code></pre>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Loading required package: ggformula</code></pre>
-<pre><code>## Loading required package: ggstance</code></pre>
-<pre><code>## 
-## Attaching package: 'ggstance'</code></pre>
-<pre><code>## The following objects are masked from 'package:ggplot2':
-## 
-##     geom_errorbarh, GeomErrorbarh</code></pre>
-<pre><code>## 
-## New to ggformula?  Try the tutorials: 
-##  learnr::run_tutorial(&quot;introduction&quot;, package = &quot;ggformula&quot;)
-##  learnr::run_tutorial(&quot;refining&quot;, package = &quot;ggformula&quot;)</code></pre>
-<pre><code>## Loading required package: mosaicData</code></pre>
-<pre><code>## Loading required package: Matrix</code></pre>
-<pre><code>## 
-## Attaching package: 'Matrix'</code></pre>
-<pre><code>## The following object is masked from 'package:tidyr':
-## 
-##     expand</code></pre>
-<pre><code>## 
-## The 'mosaic' package masks several functions from core packages in order to add 
-## additional features.  The original behavior of these functions should not be affected by this.
-## 
-## Note: If you use the Matrix package, be sure to load it BEFORE loading mosaic.</code></pre>
-<pre><code>## 
-## In accordance with CRAN policy, the 'mdsr' package 
-##            no longer attaches
-## the 'tidyverse' package automatically.
-## You may need to 'library(tidyverse)' in order to 
-##            use certain functions.</code></pre>
+<pre class="r"><code>library(ggplot2)</code></pre>
 <div id="exercise-1" class="section level3">
 <h3><em>Exercise 1</em></h3>
 <p>Load the train.csv dataset into R. How many observations and columns are there?</p>
@@ -489,29 +458,29 @@ as.tibble(sim1a)</code></pre>
 <pre><code>## # A tibble: 30 x 2
 ##        x     y
 ##    &lt;int&gt; &lt;dbl&gt;
-##  1     1  6.52
-##  2     1  8.31
-##  3     1  7.62
-##  4     2 10.0 
-##  5     2  9.87
-##  6     2  8.91
-##  7     3  9.78
-##  8     3 12.3 
-##  9     3 11.1 
-## 10     4 10.7 
+##  1     1  9.17
+##  2     1  6.17
+##  3     1  7.95
+##  4     2  9.39
+##  5     2  8.86
+##  6     2  8.70
+##  7     3 11.4 
+##  8     3 10.4 
+##  9     3 10.5 
+## 10     4 13.2 
 ## # … with 20 more rows</code></pre>
 <pre class="r"><code>sim1a_lm &lt;- lm(formula =y ~x, data = sim1a)
 tidy(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 2 x 5
-##   term        estimate std.error statistic      p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;        &lt;dbl&gt;
-## 1 (Intercept)     6.72     1.03       6.52 0.000000456 
-## 2 x               1.27     0.166      7.66 0.0000000243</code></pre>
+##   term        estimate std.error statistic  p.value
+##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
+## 1 (Intercept)     6.36     0.627      10.2 6.81e-11
+## 2 x               1.45     0.101      14.3 2.01e-14</code></pre>
 <pre class="r"><code>glance(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 1 x 11
-##   r.squared adj.r.squared sigma statistic p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.677         0.665  2.61      58.6 2.43e-8     2  -70.3  147.  151.
+##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
+##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+## 1     0.880         0.876  1.59      206. 2.01e-14     2  -55.4  117.  121.
 ## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 <p>After several attemps of running the model, it shows that the values of coefficient and R square keeps changing each time. However, R square change is so much more than coffecient. It states that the model will look most likely the same but the variance will varies after each run.</p>
 </div>

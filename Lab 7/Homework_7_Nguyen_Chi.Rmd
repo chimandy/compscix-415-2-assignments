@@ -29,6 +29,12 @@ train_data<- read_csv(file='train.csv')
 glimpse (train_data)
 
 ```
+```{r}
+df <- read.table("train.csv", header=TRUE, 
+   sep=",")
+glimpse(df)
+```
+
 
 There are 1,460 observations and 81 variables. 
 
@@ -58,8 +64,15 @@ unique(train_data$Neighborhood)
 
 
 ```{r}
-ggplot(data=train_data)+
-  geom_histogram(aes(x = SalePrice, fill = Neighborhood))
+c <- cov(df$SalePrice, as.numeric(df$Neighborhood))
+c
+```
+
+```{r}
+
+ggplot(data = train_data, mapping = aes(x = SalePrice, y=Neighborhood))+
+geom_point()
+
 ```
 
 
@@ -71,24 +84,36 @@ unique(train_data$OverallQual)
 
 
 ```{r}
-ggplot(data=train_data)+
-  geom_histogram(aes(x = SalePrice, fill = OverallQual))
+c2 <- cov(df$SalePrice, as.numeric(df$OverallQual))
+c2
+```
+
+
+
+```{r}
+df%>% ggplot (aes(x = SalePrice, y = OverallQual, fill=factor(Neighborhood,ordered=FALSE)))+
+ geom_boxplot(position="identity")+
+ coord_flip()+
+ xlab('SalePrice')+
+ ylab('OverallQual')
 ```
 
 ###*Exercise 3*
-Our target is called SalePrice. First, we can fit a simple regression model consisting of only the intercept (the average of SalePrice). Fit the model and then use the broom package to take a look at the coefficient,compare the coefficient to the average value of SalePrice, and
-take a look at the R-squared.
+Our target is called SalePrice. First, we can fit a simple regression model consisting of only the intercept (the average of SalePrice). Fit the model and then use the broom package to take a look at the coefficient,compare the coefficient to the average value of SalePrice, and take a look at the R-squared.
 
-
+Avarage Sale Price 
 ```{r}
-mean_SalePrice<-mean(train_data$SalePrice)
-sd_SalePrice <-sd(train_data$SalePrice)
+mean_SalePrice<-mean(df$SalePrice)
+sd_SalePrice <-sd(df$SalePrice)
 mean_SalePrice
 sd_SalePrice
 ```
+
+
+
 ```{r}
 train_data_1<-train_data%>%mutate(mean_SalePrice)
-(train_lm <- lm(formula =SalePrice ~mean_SalePrice, data = train_data_1))
+(train_lm <- lm(formula =SalePrice ~Id, data = train_data_1))
 
 ```
 
@@ -106,7 +131,7 @@ glance(train_lm)
 ```
 
 
-The coefficient is equal to the avarage value of SalePrice ( both are equal to 180921.2) and the R square is zero.
+The coefficient from lm model which is about 183,937 is quite different to the avarage value of SalePrice which is 180921.2. The R square is low close to zero to represent week relationship.
 
 ###*Exercise 4*
 Now fit a linear regression model using GrLivArea, OverallQual, and Neighborhood as the features. Don’t forget to look at data_description.txt to understand what these variables mean. Ask yourself these questions before fitting the model:
@@ -121,39 +146,40 @@ After fitting the model, output the coefficients and the R-squared using the bro
 
 ```{r}
 train_data_2<-train_data_1%>%mutate(Neighborhood_fct=factor(Neighborhood, ordered=FALSE))
-train_mult_lm <- lm(SalePrice ~ mean_SalePrice + GrLivArea + OverallQual + Neighborhood, data = train_data_2)
+train_mult_lm <- lm(SalePrice ~ GrLivArea + OverallQual + Neighborhood, data = train_data_2)
 tidy(train_mult_lm)
 ```
 ```{r}
 glance(train_mult_lm)
 ```
+
 Coefficient= -34829.2399
 R square = 0.7868484
 Answer these questions:
 
-How would you interpret the coefficients on GrLivArea and OverallQual?
+*How would you interpret the coefficients on GrLivArea and OverallQual?*
 
 ```{r}
 -34829.2399+ 55.5645+ 20951.4249
 ```
+OverallQual: Rates the overall material and finish of the house
+GrLivArea: Above grade (ground) living area square feet
 
+SalePrice is directly impacted by the value of OverallQual and GrLivArea based on the value of each coefficient of each feature in assumption that all other features are held constant. 
 
-or every one unit increase in average value of SalePrice, the SalePrice increases, on average, by $-34829.2399+ 55.5645+ 20951.4249= -13822.25, controlling for all other features, i.e. assuming all other features are held constant.
-How would you interpret the coefficient on NeighborhoodBrkSide?
+*How would you interpret the coefficient on NeighborhoodBrkSide?*
+Neighborhood: Physical locations within Ames city limits
+The negative  value if coeeficient states that if the neighborhood location is at NeighborhoodBrkSide, the SalePrice will be devalued. 
 
-```{r}
--13025.4529--43358.8812	
-```
-
-We would say that the mean price difference between NeighborhoodBrkSide and NeighborhoodBrDale is $30333.43.
 
 *Are the features significant?*
 
-The P value of these features are not equal to zero so these features are not significant
+The P value of these features are close to zero so these features are significant
 *Are the features practically significant?*
 
-This is a question that depends on the data, and your knowledge of it.
+*This is a question that depends on the data, and your knowledge of it.*
 
+It is also very pratical significant if we try to estimate the value of the house based on these siginificant factors.
 
 
 *Is the model a good fit?*
@@ -170,13 +196,17 @@ sim1a <- tibble(
 )
 as.tibble(sim1a)
 ```
+
+y =6.8, 10.7, 7.36, 8.02, 8.1
 ```{r}
 sim1a_lm <- lm(formula =y ~x, data = sim1a)
 tidy(sim1a_lm)
 ```
 
+intercept = 5.5, 6.6, 6.3, 5.3, 10.054
 ```{r}
 glance(sim1a_lm)
 ```
+R square = 0.92, 0.85, 0.833, 0.81, 0.1675
 
-
+After several attemps of running the model, it shows that the values of coefficient and R square keeps changing each time 

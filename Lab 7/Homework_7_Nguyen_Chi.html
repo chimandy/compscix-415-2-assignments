@@ -194,12 +194,12 @@ $(document).ready(function () {
 <p>My Github repository for my assignments can be found at this URL: <a href="https://github.com/chimandy/compscix-415-2-assignments.git" class="uri">https://github.com/chimandy/compscix-415-2-assignments.git</a></p>
 <pre class="r"><code>library(broom)
 library(tidyverse)</code></pre>
-<pre><code>## ── Attaching packages ────────────────────────────────────────────────────── tidyverse 1.2.1 ──</code></pre>
+<pre><code>## ── Attaching packages ────── tidyverse 1.2.1 ──</code></pre>
 <pre><code>## ✔ ggplot2 3.1.0     ✔ purrr   0.3.0
 ## ✔ tibble  2.0.1     ✔ dplyr   0.7.8
 ## ✔ tidyr   0.8.2     ✔ stringr 1.3.1
 ## ✔ readr   1.3.1     ✔ forcats 0.3.0</code></pre>
-<pre><code>## ── Conflicts ───────────────────────────────────────────────────────── tidyverse_conflicts() ──
+<pre><code>## ── Conflicts ───────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(ggplot2)
@@ -489,29 +489,29 @@ as.tibble(sim1a)</code></pre>
 <pre><code>## # A tibble: 30 x 2
 ##        x     y
 ##    &lt;int&gt; &lt;dbl&gt;
-##  1     1  8.40
-##  2     1 10.3 
-##  3     1  7.34
-##  4     2  9.56
-##  5     2  9.55
-##  6     2  9.48
-##  7     3 10.9 
-##  8     3 11.6 
-##  9     3 11.4 
-## 10     4  2.15
+##  1     1  7.33
+##  2     1  7.53
+##  3     1  7.73
+##  4     2  7.82
+##  5     2  9.22
+##  6     2  8.87
+##  7     3  7.64
+##  8     3 10.9 
+##  9     3  9.09
+## 10     4 11.7 
 ## # … with 20 more rows</code></pre>
 <pre class="r"><code>sim1a_lm &lt;- lm(formula =y ~x, data = sim1a)
 tidy(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)     6.22     0.873      7.12 9.46e- 8
-## 2 x               1.42     0.141     10.1  7.97e-11</code></pre>
+## 1 (Intercept)     5.77     0.640      9.01 9.02e-10
+## 2 x               1.55     0.103     15.0  6.20e-15</code></pre>
 <pre class="r"><code>glance(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 1 x 11
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.784         0.776  2.21      102. 7.97e-11     2  -65.4  137.  141.
+## 1     0.890         0.886  1.62      226. 6.20e-15     2  -56.1  118.  122.
 ## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 <p>After several attemps of running the model, it shows that the values of coefficient and R square keeps changing each time. However, R square change is so much more than coffecient. It states that the model will look most likely the same but the variance will varies after each run.</p>
 </div>

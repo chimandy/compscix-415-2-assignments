@@ -17,6 +17,7 @@ My Github repository for my assignments can be found at this URL: https://github
 library(broom)
 library(tidyverse)
 library(ggplot2)
+library(mdsr)
 ```
 
 
@@ -26,8 +27,6 @@ Load the train.csv dataset into R. How many observations and columns are there?
 ```{r}
 file_path<-'train.csv'
 train_data<- read_csv(file='train.csv')
-glimpse (train_data)
-
 ```
 ```{r}
 df <- read.table("train.csv", header=TRUE, 
@@ -46,10 +45,6 @@ Our target will be SalePrice.
 
 1. Visualize the distribution of SalePrice.
 
-```{r}
-unique(train_data$SalePrice)
-```
-
 
 ```{r}
 train_data%>% ggplot()+
@@ -58,9 +53,6 @@ train_data%>% ggplot()+
 
 2. Visualize the covariation between SalePrice and Neighborhood.
 
-```{r}
-unique(train_data$Neighborhood)
-```
 
 
 ```{r}
@@ -71,16 +63,13 @@ c
 ```{r}
 
 ggplot(data = train_data, mapping = aes(x = SalePrice, y=Neighborhood))+
-geom_point()
+geom_point()+
+coord_flip()
 
 ```
 
 
 3. Visualize the covariation between SalePrice and OverallQual.
-
-```{r}
-unique(train_data$OverallQual)
-```
 
 
 ```{r}
@@ -91,12 +80,13 @@ c2
 
 
 ```{r}
-df%>% ggplot (aes(x = SalePrice, y = OverallQual, fill=factor(Neighborhood,ordered=FALSE)))+
- geom_boxplot(position="identity")+
- coord_flip()+
- xlab('SalePrice')+
- ylab('OverallQual')
+train_data%>% ggplot (aes(x = SalePrice, y = OverallQual, fill=Neighborhood))+
+ geom_boxplot(position='dodge')+
+ coord_flip()
+
 ```
+
+
 
 ###*Exercise 3*
 Our target is called SalePrice. First, we can fit a simple regression model consisting of only the intercept (the average of SalePrice). Fit the model and then use the broom package to take a look at the coefficient,compare the coefficient to the average value of SalePrice, and take a look at the R-squared.
@@ -159,9 +149,6 @@ Answer these questions:
 
 *How would you interpret the coefficients on GrLivArea and OverallQual?*
 
-```{r}
--34829.2399+ 55.5645+ 20951.4249
-```
 OverallQual: Rates the overall material and finish of the house
 GrLivArea: Above grade (ground) living area square feet
 
@@ -197,16 +184,13 @@ sim1a <- tibble(
 as.tibble(sim1a)
 ```
 
-y =6.8, 10.7, 7.36, 8.02, 8.1
 ```{r}
 sim1a_lm <- lm(formula =y ~x, data = sim1a)
 tidy(sim1a_lm)
 ```
 
-intercept = 5.5, 6.6, 6.3, 5.3, 10.054
 ```{r}
 glance(sim1a_lm)
 ```
-R square = 0.92, 0.85, 0.833, 0.81, 0.1675
 
-After several attemps of running the model, it shows that the values of coefficient and R square keeps changing each time 
+After several attemps of running the model, it shows that the values of coefficient and R square keeps changing each time. However, R square change is so much more than coffecient. It states that the model will look most likely the same but the variance will varies after each run. 

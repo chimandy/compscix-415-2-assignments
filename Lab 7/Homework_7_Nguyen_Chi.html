@@ -619,16 +619,16 @@ as.tibble(sim1a)</code></pre>
 <pre><code>## # A tibble: 30 x 2
 ##        x     y
 ##    &lt;int&gt; &lt;dbl&gt;
-##  1     1  5.60
-##  2     1  8.31
-##  3     1  5.35
-##  4     2  7.09
-##  5     2  9.14
-##  6     2  9.70
-##  7     3  9.42
-##  8     3 11.3 
-##  9     3  9.83
-## 10     4 10.5 
+##  1     1  8.38
+##  2     1  5.02
+##  3     1  6.51
+##  4     2  8.08
+##  5     2  7.54
+##  6     2 11.7 
+##  7     3 10.7 
+##  8     3 11.2 
+##  9     3 10.7 
+## 10     4 11.1 
 ## # … with 20 more rows</code></pre>
 <p>y =6.8, 10.7, 7.36, 8.02, 8.1</p>
 <pre class="r"><code>sim1a_lm &lt;- lm(formula =y ~x, data = sim1a)
@@ -636,14 +636,14 @@ tidy(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 2 x 5
 ##   term        estimate std.error statistic  p.value
 ##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)     5.51    0.617       8.94 1.08e- 9
-## 2 x               1.46    0.0994     14.7  1.03e-14</code></pre>
+## 1 (Intercept)     5.71     0.652      8.76 1.63e- 9
+## 2 x               1.49     0.105     14.2  2.46e-14</code></pre>
 <p>intercept = 5.5, 6.6, 6.3, 5.3, 10.054</p>
 <pre class="r"><code>glance(sim1a_lm)</code></pre>
 <pre><code>## # A tibble: 1 x 11
 ##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
 ##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;int&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.886         0.882  1.56      217. 1.03e-14     2  -54.9  116.  120.
+## 1     0.878         0.874  1.65      202. 2.46e-14     2  -56.6  119.  123.
 ## # … with 2 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;</code></pre>
 <p>R square = 0.92, 0.85, 0.833, 0.81, 0.1675</p>
 <p>After several attemps of running the model, it shows that the values of coefficient and R square keeps changing each time</p>
